@@ -111,3 +111,18 @@ private:
     std::string const name_;
     Expression const* arg_;
 };
+
+// Transformer (Visitor interface)
+struct Transformer {
+    virtual ~Transformer() {}
+    virtual Expression* transformNumber(Number const*) = 0;
+    virtual Expression* transformBinaryOperation(BinaryOperation const*) = 0;
+    virtual Expression* transformFunctionCall(FunctionCall const*) = 0;
+    virtual Expression* transformVariable(Variable const*) = 0;
+};
+
+// Реализация transform()
+Expression* Number::transform(Transformer* tr) const { return tr->transformNumber(this); }
+Expression* Variable::transform(Transformer* tr) const { return tr->transformVariable(this); }
+Expression* BinaryOperation::transform(Transformer* tr) const { return tr->transformBinaryOperation(this); }
+Expression* FunctionCall::transform(Transformer* tr) const { return tr->transformFunctionCall(this); }
