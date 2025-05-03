@@ -152,3 +152,54 @@ struct CopySyntaxTree : Transformer {
         return new Variable(var->name());
     }
 };
+
+// Сворачивание констант
+struct FoldConstants : Transformer {
+    Expression* transformNumber(Number const* number) override {
+        return new Number(number->value());
+    }
+
+    Expression* transformVariable(Variable const* var) override {
+        return new Variable(var->name());
+    }
+
+    Expression* transformBinaryOperation(BinaryOperation const* binop) override {
+        Expression* l = binop->left()->transform(this);
+        Expression* r = binop->right()->transform(this);
+
+        Number* ln = dynamic_cast<Number*>(l);
+        Number* rn = dynamic_cast<Number*>(r);
+
+        if (ln && rn) {
+            double result = 0.0;
+            switch (binop->operation()) {
+            case BinaryOperation::PLUS: result = ln->value() + rn->value(); break;
+            case BinaryOperation::MINUS: result = ln->value() - rn->value(); break;
+            case BinaryOperation::MUL: result = ln->value() * rn->value(); break;
+            case BinaryOperation::DIV: result = ln->value() / rn->value(); break;
+            }
+            delete l;
+            delete r;
+            return new Number(result);
+        }
+
+        return new BinaryOperation(l, binop->operation(), r);
+    }
+
+    Expression* transformFunctionCall(FunctionCall const* fcall) override {
+        Expression* arg = fcall->arg()->transform(this);
+        Number* n = dynamic_cast<Number*>(arg);
+
+        if (n) {
+            double result = 0.0;
+            if (fcall->name() == "sqrt") result = std::sqrt(n->value());
+            else if (fcall->name() == "abs") result = std::fabs(n->value());
+            else return new FunctionCall(fcall->name(), arg);
+
+            delete arg;
+            return new Number(result);
+        }
+
+        return new FunctionCall(fcall->name(), arg);
+    }
+};
