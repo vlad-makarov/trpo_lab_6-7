@@ -35,3 +35,57 @@ struct Dill : Product {
     Dill(double w) { name = "Укроп и пряности"; weight = w; }
     void accept(NutritionVisitor& visitor) override;
 };
+
+// Посетитель для расчета характеристик
+struct NutritionVisitor {
+    double totalCalories = 0;
+    double totalProteins = 0;
+    double totalFats = 0;
+    double totalCarbs = 0;
+    double totalCost = 0;
+
+    void visit(Mushroom* m) {
+        double ratio = m->weight / 100;
+        totalCalories += 27 * ratio;
+        totalProteins += 4.4 * ratio;
+        totalFats += 1 * ratio;
+        totalCarbs += 0.2 * ratio;
+        totalCost += 20 * ratio;
+    }
+
+    void visit(Shrimp* s) {
+        double ratio = s->weight / 100;
+        totalCalories += 83 * ratio;
+        totalProteins += 18 * ratio;
+        totalFats += 1 * ratio;
+        totalCarbs += 0 * ratio;
+        totalCost += 50 * ratio;
+    }
+
+    void visit(SourCream* sc) {
+        double ratio = sc->weight / 100;
+        totalCalories += 120 * ratio;
+        totalProteins += 3.3 * ratio;
+        totalFats += 10 * ratio;
+        totalCarbs += 3.3 * ratio;
+        totalCost += 14.4 * ratio;
+    }
+
+    void visit(Cheese* c) {
+        double ratio = c->weight / 100;
+        totalCalories += 345 * ratio;
+        totalProteins += 25 * ratio;
+        totalFats += 25 * ratio;
+        totalCarbs += 0 * ratio;
+        totalCost += 70 * ratio;
+    }
+
+    void visit(Dill* d) {
+        double ratio = d->weight / 100;
+        totalCalories += 37 * ratio;
+        totalProteins += 3.3 * ratio;
+        totalFats += 0 * ratio;
+        totalCarbs += 7 * ratio;
+        totalCost += 20 * ratio;
+    }
+};
