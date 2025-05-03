@@ -96,3 +96,22 @@ void Shrimp::accept(NutritionVisitor& visitor) { visitor.visit(this); }
 void SourCream::accept(NutritionVisitor& visitor) { visitor.visit(this); }
 void Cheese::accept(NutritionVisitor& visitor) { visitor.visit(this); }
 void Dill::accept(NutritionVisitor& visitor) { visitor.visit(this); }
+
+// Класс рецепта
+struct Recipe {
+    vector<Product*> ingredients;
+
+    ~Recipe() {
+        for (auto p : ingredients) delete p;
+    }
+
+    void addIngredient(Product* p) {
+        ingredients.push_back(p);
+    }
+
+    void calculateNutrition(NutritionVisitor& visitor) {
+        for (auto p : ingredients) {
+            p->accept(visitor);
+        }
+    }
+};
