@@ -115,3 +115,28 @@ struct Recipe {
         }
     }
 };
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    // Создаем рецепт блюда
+    Recipe dish;
+    dish.addIngredient(new Mushroom(500));
+    dish.addIngredient(new Shrimp(100));
+    dish.addIngredient(new SourCream(30));
+    dish.addIngredient(new Cheese(20));
+    dish.addIngredient(new Dill(30));
+
+    // Рассчитываем характеристики
+    NutritionVisitor visitor;
+    dish.calculateNutrition(visitor);
+
+    // Выводим результаты
+    cout << "Характеристики блюда:" << endl;
+    cout << "Калорийность: " << visitor.totalCalories << " кКал" << endl;
+    cout << "Белки: " << visitor.totalProteins << " г" << endl;
+    cout << "Жиры: " << visitor.totalFats << " г" << endl;
+    cout << "Углеводы: " << visitor.totalCarbs << " г" << endl;
+    cout << "Стоимость: " << visitor.totalCost << " руб" << endl;
+
+    return 0;
+}
