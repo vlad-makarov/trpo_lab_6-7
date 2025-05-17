@@ -92,3 +92,10 @@ struct NutritionVisitor {
         info.cost += 20 * gramsToKilograms;
     }
 };
+
+// Реализация accept для каждого продукта
+void Mushroom::accept(NutritionVisitor& visitor) { visitor.visit(this); }
+void Shrimp::accept(NutritionVisitor& visitor) { visitor.visit(this); }
+void SourCream::accept(NutritionVisitor& visitor) { visitor.visit(this); }
+void Cheese::accept(NutritionVisitor& visitor) { visitor.visit(this); }
+void Dill::accept(NutritionVisitor& visitor) { visitor.visit(this); }
