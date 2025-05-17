@@ -99,3 +99,50 @@ void Shrimp::accept(NutritionVisitor& visitor) { visitor.visit(this); }
 void SourCream::accept(NutritionVisitor& visitor) { visitor.visit(this); }
 void Cheese::accept(NutritionVisitor& visitor) { visitor.visit(this); }
 void Dill::accept(NutritionVisitor& visitor) { visitor.visit(this); }
+
+// Класс рецепта
+struct Recipe {
+    vector<Product*> ingredients;
+
+    ~Recipe() {
+        for (auto p : ingredients) delete p;
+    }
+
+    void addIngredient(Product* p) {
+        ingredients.push_back(p);
+    }
+
+    NutritionVisitor::NutritionInfo calculateNutrition() {
+        NutritionVisitor visitor;
+        for (auto p : ingredients) {
+            p->accept(visitor);
+        }
+        return visitor.info;
+    }
+};
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    // Создаем рецепт блюда
+    Recipe dish;
+    dish.addIngredient(new Mushroom(500));
+    dish.addIngredient(new Shrimp(100));
+    dish.addIngredient(new SourCream(30));
+    dish.addIngredient(new Cheese(20));
+    dish.addIngredient(new Dill(30));
+
+    // Рассчитываем характеристики
+    auto nutrition = dish.calculateNutrition();
+
+    // Выводим результаты
+    cout << "Характеристики блюда:" << endl;
+    cout << fixed << setprecision(2);
+    cout << "Калорийность: " << nutrition.calories << " кКал" << endl;
+    cout << "Белки: " << nutrition.proteins << " г" << endl;
+    cout << "Жиры: " << nutrition.fats << " г" << endl;
+    cout << "Углеводы: " << nutrition.carbs << " г" << endl;
+    cout << "Стоимость: " << nutrition.cost << " руб" << endl;
+
+    return 0;
+}
